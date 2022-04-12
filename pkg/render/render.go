@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
-
+	"github.com/marif226/basic-webapp/pkg/models"
 	"github.com/marif226/basic-webapp/pkg/config"
 )
 
@@ -22,7 +22,11 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func AddDefaultData(templData *models.TemplateData) *models.TemplateData {
+	return templData
+}
+
+func RenderTemplate(w http.ResponseWriter, tmpl string, tmplData *models.TemplateData) {
 	var templateCache map[string]*template.Template
 	if app.UseCache {
 		// get the template cache from the app config
@@ -40,8 +44,10 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	// holds bytes
 	buf := new(bytes.Buffer)
 
+	tmplData = AddDefaultData(tmplData)
+
 	// store executed template in buf
-	_ = t.Execute(buf, nil)
+	_ = t.Execute(buf, tmplData)
 
 	_, err := buf.WriteTo(w)
 	if err != nil {

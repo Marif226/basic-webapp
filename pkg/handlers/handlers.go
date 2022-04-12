@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"github.com/marif226/basic-webapp/pkg/config"
 	"github.com/marif226/basic-webapp/pkg/render"
+	"github.com/marif226/basic-webapp/pkg/models"
 )
 
 // Repo the repositpry used by the handlers
@@ -28,10 +29,16 @@ func NewHandlers(r *Repository) {
 
 // Home is the home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.html")
+	render.RenderTemplate(w, "home.page.html", &models.TemplateData{})
 }
 
 // About is the about page handler
 func (m *Repository) About(w http.ResponseWriter, t *http.Request) {
-	render.RenderTemplate(w, "about.page.html")
+	// perform some logic
+	stringMap := make(map[string]string)
+	stringMap["test"] = "Hello test!"
+
+	render.RenderTemplate(w, "about.page.html", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }
